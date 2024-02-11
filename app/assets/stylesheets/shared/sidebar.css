@@ -1,0 +1,53 @@
+/* Sidebar styles */
+.sidebar {
+  height: 100%;
+  width: 200px;
+  position: fixed;
+  left: 0;
+  top: 0;
+  background-color: #333;
+  padding-top: 20px;
+  box-sizing: border-box;
+}
+
+.sidebar a {
+  padding: 10px;
+  text-decoration: none;
+  font-size: 18px;
+  color: white;
+  display: block;
+}
+
+.sidebar a:hover {
+  background-color: #555;
+}
+
+/* Active link style */
+.sidebar a.active {
+  background-color: #555;
+}
+
+/* Content styles */
+.content {
+  margin-left: 200px; /* Adjust according to sidebar width */
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Responsive styles */
+@media screen and (max-width: 600px) {
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+    padding-top: 0;
+  }
+
+  .sidebar a {
+    text-align: center;
+  }
+
+  .content {
+    margin-left: 0;
+  }
+}

@@ -1,0 +1,35 @@
+<section style="background-color: #eee;">
+  <div class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-md-8 col-lg-6 col-xl-4">
+        <div class="card text-black">
+            <i class="fab fa-apple fa-lg pt-3 pb-1 px-3"></i>
+            <% if @product.image_url.present? %>
+               <%= image_tag @product.image_url, size: "300x210", alt: "Image not found",class: "card-img-top" %>
+            <% else %>
+               <%= image_tag "https://totalcomp.com/images/no-image.jpeg", size: "300x210", alt: "Image not found", class: "card-img-top" %>
+            <% end %>
+            <div class="card-body">
+              <div class="text-center">
+                <h5 class="card-title"><%= @product.name %></h5>
+              </div>
+            
+              <div class="text-start">
+                <%= @product.description %>
+              </div>
+
+              <h5 class="text-center">
+                <%= number_to_currency(@product.price, unit: '₹', precision: 0, format: "%u%n") %>
+              </h5>
+            </div>
+          </div>
+          <br>
+          <div class="d-flex justify-content-between">
+            <button type="button" class="btn bg-cart align-center"><i class="fa fa-cart-plus mr-2"></i> Add to cart</button>
+            <button type="button" class="btn bg-cart align-center"><i class="fa fa-cart-plus mr-2"></i> Buy now</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,35 @@
+class User < ApplicationRecord
+  # Include default devise modules. Others available are:
+  # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
+  devise :database_authenticatable, :registerable,
+         :recoverable, :rememberable, :validatable
+
+  validates :name, presence: true
+  validates :phone, presence: true
+  validates :role, presence:true, inclusion: { in: ['customer', 'admin'],
+  message: "User's role should be either 'customer' or 'admin'." }
+
+  has_many :addresses, dependent: :destroy
+
+  has_one :cart, dependent: :destroy
+
+  after_create :create_cart_for_user
+  before_validation :assign_role
+
+  def is_admin?
+    self.role == 'admin'
+  end
+
+  def is_customer?
+    self.role == 'customer'
+  end
+
+  private
+  def create_cart_for_user
+    Cart.create(user: self)
+  end
+
+  def assign_role ## Change later to User controller
+    self.role = 'customer'
+  end
+end

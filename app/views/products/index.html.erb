@@ -1,0 +1,52 @@
+<% unless @products.empty? %>
+  <div class="container d-flex justify-content-center mt-50 mb-50">
+    <div class="row">
+      <% @products.each do |product| %>
+        <div class="col-md-4 mt-2">
+          <div class="card">
+            <div class="card-body">
+              <div class="card-img-actions">
+                <% if product.image_url.present? %>
+                  <%= image_tag product.image_url, size: "300x200" , alt: "Image not found" %> <br>
+                    <% else %>
+                      <%= image_tag "https://totalcomp.com/images/no-image.jpeg" , size: "300x200" ,
+                        alt: "Image not found" %> <br>
+                        <% end %>
+              </div>
+            </div>
+
+            <div class="card-body bg-light text-center">
+              <div class="mb-2">
+                <h6 class="font-weight-semibold mb-2">
+                  <%= link_to product.name, product_path(product) %>
+                </h6>
+                <h6 class="mb-0 font-weight-semibold ">
+                  <%= number_to_currency(product.price, unit: '₹' , precision: 0, format: "%u%n" ) %>
+                </h6>
+                <% if current_user && current_user.is_customer? %>
+                  <div class="d-flex justify-content-between">
+                    <%= link_to "Add to cart" %>
+                    <%= link_to "Buy now" %>  
+                  </div>
+                <% end %>
+                <br>
+                <% if current_user && current_user.is_admin? %>
+                  <div class="d-flex justify-content-between">
+                    <%= link_to "Edit", edit_product_path(product) %>
+                    <%= link_to "Delete", product_path(product), data:{
+                                                                       turbo_method: :delete,
+                                                                       turbo_confirm: "Are you sure?"
+                                                                    }
+                    %>                    
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        </div>
+        <% end %>
+    </div>
+  </div>
+  <% else %>
+    <p>No products found.</p>
+    <% end %>

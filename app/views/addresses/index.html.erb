@@ -1,0 +1,31 @@
+<h1>Your Addresses</h1>
+
+<% unless @addresses.empty? %>
+    <div> Welcome <%= current_user.name %>. See all your addresses </div> 
+    <ol>
+        <% @addresses.each do |address| %>
+        <li>
+            <strong>Street:</strong> <%= address.street %><br>
+            <strong>City:</strong> <%= address.city %><br>
+            <strong>State:</strong> <%= address.state %><br>
+            <strong>Zip Code:</strong> <%= address.zip_code %><br>
+            <strong>Country:</strong> <%= address.country %><br>
+        </li>
+        <ul>
+            <li><%= link_to "Edit", edit_address_path(address) %></li>
+            <li><%= link_to "Destroy", address_path(address), data:{
+                                                                       turbo_method: :delete,
+                                                                       turbo_confirm: "Are you sure?"
+                                                                    }
+                %>
+            </li>
+        </ul>
+        <% end %>
+    </ol>
+<% else %>
+  <p>No addresses found.</p>
+<% end %>
+
+<br>
+
+<%= link_to "New Address", new_address_path %>

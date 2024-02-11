@@ -1,0 +1,6 @@
+<div> Welcome to our E-commerce </div>
+<br>
+<% if user_signed_in? %> 
+ <div> Welcome <%= current_user.name %> </div> 
+<% end %>
+

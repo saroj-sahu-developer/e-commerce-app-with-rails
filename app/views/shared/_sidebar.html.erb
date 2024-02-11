@@ -1,0 +1,22 @@
+<div class="sidebar">
+    <%= link_to "Home", root_path, class: (current_page?(root_path) ? 'active' : '') %>
+    <%= link_to "Products", products_path, class: (current_page?(products_path) ? 'active' : '') %>
+
+    <% if user_signed_in? && current_user.is_admin? %>
+        <%= link_to "Add products", new_product_path, class: (current_page?(new_product_path) ? 'active' : '') %>
+    <% end %>
+
+    <% if user_signed_in? && current_user.is_customer? %>
+        <%= link_to "Your addresses", addresses_path, class: (current_page?(addresses_path) ? 'active' : '') %>
+    <% end %>
+
+    <% if user_signed_in? %> 
+      <%= link_to "Sign out", destroy_user_session_path, data:{ turbo_method: :delete, data:{
+                                                                       turbo_method: :delete,
+                                                                       turbo_confirm: "Are you sure?"
+                                                                    } } %> 
+    <% else %>
+      <%= link_to "Sign in", new_user_session_path %> 
+      <%= link_to "Sign up", new_user_registration_path %> 
+    <% end %>
+</div>

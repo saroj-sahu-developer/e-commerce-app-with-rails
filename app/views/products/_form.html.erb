@@ -1,0 +1,45 @@
+<%= form_with model: product do |form| %>
+  <div>
+    <%= form.label :name %><br>
+    <%= form.text_field :name %>
+    <% product.errors.full_messages_for(:name).each do |message| %>
+      <div><%= message %></div>
+    <% end %>
+  </div>
+
+  <div>
+    <%= form.label :description %><br>
+    <%= form.text_area :description %>
+    <% product.errors.full_messages_for(:description).each do |message| %>
+      <div><%= message %></div>
+    <% end %>
+  </div>
+
+  <div>
+    <%= form.label :price %><br>
+    <%= form.number_field :price, step: '0.01', min: '0' %>
+    <% product.errors.full_messages_for(:price).each do |message| %>
+      <div><%= message %></div>
+    <% end %>
+  </div>
+
+  <div>
+    <%= form.label :quantity_available %><br>
+    <%= form.number_field :quantity_available, min: '0', step: '1' %>
+    <% product.errors.full_messages_for(:quantity_available).each do |message| %>
+      <div><%= message %></div>
+    <% end %>
+  </div>
+
+  <div>
+    <%= form.label :image %><br>
+    <%= form.file_field :image %>
+    <% product.errors.full_messages_for(:image_url).each do |message| %>
+      <div><%= message %></div>
+    <% end %>
+  </div>  
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>
