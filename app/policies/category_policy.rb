@@ -1,4 +1,8 @@
-class ProductPolicy < ApplicationPolicy
+class CategoryPolicy < ApplicationPolicy
+  def index?
+    user.admin?
+  end
+
   def create?
     user.admin?
   end
@@ -18,7 +22,7 @@ class ProductPolicy < ApplicationPolicy
   def destroy?
     user.admin?
   end
-
+  
   class Scope < Scope
     # NOTE: Be explicit about which records you allow access to!
     # def resolve

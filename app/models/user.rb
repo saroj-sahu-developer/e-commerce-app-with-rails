@@ -16,17 +16,19 @@ class User < ApplicationRecord
   after_create :create_cart_for_user
   before_validation :assign_role
 
-  def is_admin?
+  def admin?
     self.role == 'admin'
   end
 
-  def is_customer?
+  def customer?
     self.role == 'customer'
   end
 
   private
   def create_cart_for_user
-    Cart.create(user: self)
+    if(self.customer?)
+      Cart.create(user: self)
+    end
   end
 
   def assign_role ## Change later to User controller

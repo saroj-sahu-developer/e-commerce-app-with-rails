@@ -1,0 +1,39 @@
+<div class="container mt-5">
+  <% if @carts_products.empty? %>
+    <h2>Your Cart looks empty! </h2>
+  <% else %>
+    <div class="row">
+      <div class="col-md-8">
+        <% @carts_products.each do |carts_product| %>
+          <div class="row mb-4">
+            <div class="col-md-2">
+              <% if carts_product.product.image_url.present? %>
+                <%= image_tag carts_product.product.image_url, class: "img-fluid", alt: "Image not found" %>
+              <% else %>
+                <%= image_tag "https://totalcomp.com/images/no-image.jpeg", class: "img-fluid", alt: "Image not found" %>
+              <% end %>
+            </div>
+            <div class="col-md-6">
+              <h5><%= carts_product.product.name %></h5>
+              <p><%= carts_product.product.description %></p>
+              <p>Price: <%= number_to_currency(carts_product.product.price, unit: "₹", format: "%u %n") %></p>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <h6>Quantity</h6>
+                <%= select_tag " ", options_for_select((1..10).to_a, selected: carts_product.product_quantity), class: "form-control form-control-sm" %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+      <div class="col-md-4">
+        <div class="border p-3">
+          <h4>Proceed to buy</h4>
+          <p>Total Amount: <%= number_to_currency(@carts_products.sum { |cp| cp.product.price * cp.product_quantity }, unit: "₹", format: "%u %n") %></p>
+          <%= link_to "Proceed to Buy", "" %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>

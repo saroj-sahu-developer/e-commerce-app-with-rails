@@ -23,14 +23,16 @@
                 <h6 class="mb-0 font-weight-semibold ">
                   <%= number_to_currency(product.price, unit: '₹' , precision: 0, format: "%u%n" ) %>
                 </h6>
-                <% if current_user && current_user.is_customer? %>
+                <% if current_user && current_user.customer? %>
                   <div class="d-flex justify-content-between">
-                    <%= link_to "Add to cart" %>
+                    <%= link_to "Add to cart", "/cart/#{product.id}", data:{
+                                                                turbo_method: :post,
+                                                              } %>
                     <%= link_to "Buy now" %>  
                   </div>
                 <% end %>
                 <br>
-                <% if current_user && current_user.is_admin? %>
+                <% if current_user && current_user.admin? %>
                   <div class="d-flex justify-content-between">
                     <%= link_to "Edit", edit_product_path(product) %>
                     <%= link_to "Delete", product_path(product), data:{
