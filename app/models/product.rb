@@ -7,4 +7,8 @@ class Product < ApplicationRecord
   validates :quantity_available, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
 
   has_many :carts_products, dependent: :destroy
+
+  has_one_attached :image
+
+  # set default image when no image is uploaded by user
 end

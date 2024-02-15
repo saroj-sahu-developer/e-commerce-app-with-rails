@@ -27,4 +27,6 @@ class CartsController < ApplicationController
       redirect_to(request.referrer || products_path)
     end
   end
+
+  
 end

@@ -4,11 +4,9 @@
       <div class="col-md-8 col-lg-6 col-xl-4">
         <div class="card text-black">
             <i class="fab fa-apple fa-lg pt-3 pb-1 px-3"></i>
-            <% if @product.image_url.present? %>
-               <%= image_tag @product.image_url, size: "300x210", alt: "Image not found",class: "card-img-top" %>
-            <% else %>
-               <%= image_tag "https://totalcomp.com/images/no-image.jpeg", size: "300x210", alt: "Image not found", class: "card-img-top" %>
-            <% end %>
+            <div>
+              <%= image_tag @product.image, size: "300x210", alt: "Image not found",class: "card-img-top" if @product.image.attached? %>
+            </div>
             <div class="card-body">
               <div class="text-center">
                 <h5 class="card-title"><%= @product.name %></h5>
@@ -22,12 +20,21 @@
                 <%= number_to_currency(@product.price, unit: '₹', precision: 0, format: "%u%n") %>
               </h5>
             </div>
-          </div>
-          <br>
-          <div class="d-flex justify-content-between">
-            <button type="button" class="btn bg-cart align-center"><i class="fa fa-cart-plus mr-2"></i> Add to cart</button>
-            <button type="button" class="btn bg-cart align-center"><i class="fa fa-cart-plus mr-2"></i> Buy now</button>
-          </div>
+          <% if current_user && current_user.customer? %>
+            <div class="d-flex justify-content-between mt-3">
+              <%= link_to "Add to Cart", "/cart/#{@product.id}", data: { turbo_method: :post }, class: "btn btn-primary" %>
+              <%= link_to "Buy Now", "#", class: "btn btn-success" %>
+            </div>
+          <% end %> 
+          <% if current_user && current_user.admin? %>
+            <div class="d-flex justify-content-between mt-3">
+              <%= link_to "Edit", edit_product_path(@product), class: "btn btn-warning" %>
+              <%= link_to "Delete", product_path(@product), data: { turbo_method: :delete,
+                                                                    turbo_confirm: "Are you sure?" }, 
+                                                                    class: "btn btn-danger" 
+              %>
+            </div>
+          <% end %> 
         </div>
       </div>
     </div>

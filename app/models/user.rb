@@ -14,7 +14,7 @@ class User < ApplicationRecord
   has_one :cart, dependent: :destroy
 
   after_create :create_cart_for_user
-  before_validation :assign_role
+  before_validation :assign_role, on: :create
 
   def admin?
     self.role == 'admin'

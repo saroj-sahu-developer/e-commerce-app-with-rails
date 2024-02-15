@@ -1,54 +1,74 @@
+<div class="container mt-3">
+  <%= form_with url: products_path, method: :get do |form| %>
+    <%= form.radio_button(:category_id, 'all',
+      checked: params[:category_id] == 'all' || params[:category_id].nil?,
+      class: "mr-2") 
+    %>
+    <%= form.label(:category_id_all, "All", class: "mr-3") %>
+
+    <% @categories.each do |category| %>
+      <%= form.radio_button(:category_id, category.id, 
+      checked: !params[:category_id].nil? && params[:category_id].to_i == category.id, 
+      class: "mr-2") %>
+      <%= form.label("category_id_#{category.id}", category.name, class: "mr-3") %>
+    <% end %>
+
+    <%= form.submit("Filter", class: "btn btn-primary") %>
+  <% end %>
+</div>
+
+<div class="container mt-3">
+  <%= form_with url: products_path, method: :get, class: "form-inline" do |form| %>
+    <%= form.label :search_with, "Search by Name:", class: "mr-2" %>
+    <%= form.text_field :search_with, value: params[:search_with], class: "form-control mr-2" %>
+    
+    <%= form.submit("Search", class: "btn btn-primary mt-2") %>
+  <% end %>
+</div>
+
 <% unless @products.empty? %>
-  <div class="container d-flex justify-content-center mt-50 mb-50">
-    <div class="row">
+  <div class="container mt-5">
+    <div class="row mt-4">
       <% @products.each do |product| %>
-        <div class="col-md-4 mt-2">
+        <div class="col-md-4 mb-4">
           <div class="card">
-            <div class="card-body">
-              <div class="card-img-actions">
-                <% if product.image_url.present? %>
-                  <%= image_tag product.image_url, size: "300x200" , alt: "Image not found" %> <br>
-                    <% else %>
-                      <%= image_tag "https://totalcomp.com/images/no-image.jpeg" , size: "300x200" ,
-                        alt: "Image not found" %> <br>
-                        <% end %>
-              </div>
+            <div>
+              <%= image_tag product.image, size: "300x200" , alt: "Image not found", class: "card-img-top" if product.image.attached? %> 
             </div>
 
-            <div class="card-body bg-light text-center">
-              <div class="mb-2">
-                <h6 class="font-weight-semibold mb-2">
-                  <%= link_to product.name, product_path(product) %>
-                </h6>
-                <h6 class="mb-0 font-weight-semibold ">
-                  <%= number_to_currency(product.price, unit: '₹' , precision: 0, format: "%u%n" ) %>
-                </h6>
-                <% if current_user && current_user.customer? %>
-                  <div class="d-flex justify-content-between">
-                    <%= link_to "Add to cart", "/cart/#{product.id}", data:{
-                                                                turbo_method: :post,
-                                                              } %>
-                    <%= link_to "Buy now" %>  
-                  </div>
-                <% end %>
-                <br>
-                <% if current_user && current_user.admin? %>
-                  <div class="d-flex justify-content-between">
-                    <%= link_to "Edit", edit_product_path(product) %>
-                    <%= link_to "Delete", product_path(product), data:{
-                                                                       turbo_method: :delete,
-                                                                       turbo_confirm: "Are you sure?"
-                                                                    }
-                    %>                    
-                  </div>
-                <% end %>
-              </div>
+            <div class="card-body text-center">
+              <h5 class="card-title">
+                <%= link_to product.name, product_path(product) %>
+              </h5>
+
+              <p class="card-text">
+                <%= number_to_currency(product.price, unit: '₹', precision: 0, format: "%u%n") %>
+              </p>
+
+              <% if current_user && current_user.customer? %>
+                <div class="d-flex justify-content-between mt-3">
+                  <%= link_to "Add to Cart", "/cart/#{product.id}", data: { turbo_method: :post },
+                              class: "btn btn-primary" %>
+                  <%= link_to "Buy Now", "#", class: "btn btn-success" %>
+                </div>
+              <% end %>
+
+              <% if current_user && current_user.admin? %>
+                <div class="d-flex justify-content-between mt-3">
+                  <%= link_to "Edit", edit_product_path(product), class: "btn btn-warning" %>
+                  <%= link_to "Delete", product_path(product), data: { turbo_method: :delete,
+                                                                      turbo_confirm: "Are you sure?" },
+                              class: "btn btn-danger" %>
+                </div>
+              <% end %>
             </div>
           </div>
         </div>
-        <% end %>
+      <% end %>
     </div>
   </div>
-  <% else %>
-    <p>No products found.</p>
-    <% end %>
+<% else %>
+  <div class="container mt-5">
+    <p class="text-center">No products found.</p>
+  </div>
+<% end %>

@@ -33,8 +33,19 @@
 
   <div>
     <%= form.label :image %><br>
-    <%= form.file_field :image %>
-    <% product.errors.full_messages_for(:image_url).each do |message| %>
+    <%= form.hidden_field :image, value: product.image.signed_id if product&.image&.attached? && product&.image&.persisted? %>
+    <%= form.file_field :image, direct_upload: true %>
+    <% product.errors.full_messages_for(:image).each do |message| %>
+      <div><%= message %></div>
+    <% end %>
+  </div> 
+
+  <div>
+    <%= form.label "Select Category" %><br>
+    <%= form.select :category_id, 
+        options_for_select(@categories.pluck(:name, :id), product.category_id), include_blank: 'None'
+    %>
+    <% product.errors.full_messages_for(:category).each do |message| %>
       <div><%= message %></div>
     <% end %>
   </div>  
