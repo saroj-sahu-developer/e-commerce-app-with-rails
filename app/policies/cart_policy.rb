@@ -7,6 +7,10 @@ class CartPolicy < ApplicationPolicy
     user.customer? && user == record.user
   end
 
+  def delete_product_from_cart?
+    user.customer? && user == record.user
+  end
+
   class Scope < Scope
     # NOTE: Be explicit about which records you allow access to!
     # def resolve

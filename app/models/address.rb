@@ -1,5 +1,6 @@
 class Address < ApplicationRecord
   belongs_to :user
+  has_many :orders
 
   validates :user, presence: true
   validates :street, presence: true, length: { maximum: 255 }

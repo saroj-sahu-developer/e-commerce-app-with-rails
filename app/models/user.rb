@@ -10,8 +10,8 @@ class User < ApplicationRecord
   message: "User's role should be either 'customer' or 'admin'." }
 
   has_many :addresses, dependent: :destroy
-
   has_one :cart, dependent: :destroy
+  has_many :orders
 
   after_create :create_cart_for_user
   before_validation :assign_role, on: :create

@@ -34,11 +34,27 @@
   <div>
     <%= form.label :image %><br>
     <%= form.hidden_field :image, value: product.image.signed_id if product&.image&.attached? && product&.image&.persisted? %>
-    <%= form.file_field :image, direct_upload: true %>
+    <%= form.file_field :image, direct_upload: true, id: "image-input" %>
     <% product.errors.full_messages_for(:image).each do |message| %>
       <div><%= message %></div>
     <% end %>
   </div> 
+
+  <div id="image-preview-container">
+    <% if product&.image&.attached? && product&.image&.persisted? %>
+      <%# This is for edit page where record has attached image %>
+      <span id='existing-image-preview'>
+        <div>Existing Image</div>
+        <%= image_tag product.image, size: "100x100" %>
+        <%= link_to "Remove Image", "/products/#{product.id}/remove-image", 
+        id: "remove-existing-image", data: {turbo_method: :delete} %>
+      </span>
+      <img id="new-image-preview" style="display: none; width: 100px; height: 100px;" />
+    <% else %>
+      <%# This is for new page %>
+      <img id="new-image-preview" style="display: none; width: 100px; height: 100px;" />
+    <% end %>
+  </div>
 
   <div>
     <%= form.label "Select Category" %><br>
@@ -54,3 +70,34 @@
     <%= form.submit %>
   </div>
 <% end %>
+
+<script>
+    $(document).ready(function() {
+      $('#image-input').change(function() {
+        displayImagePreview(this, $('#new-image-preview'));
+      });
+
+      function displayImagePreview(input, preview) {
+        if (input.files && input.files.length == 0) {
+          // #image-input changed but no image selected.
+          // So we can hide the  #image-preview
+          preview.hide();
+        }
+        if (input.files && input.files[0]) {
+          // #image-input changed and image selected.
+          var reader = new FileReader();
+
+          reader.onload = function(e) {
+            preview.attr('src', e.target.result).show();
+          };
+
+          reader.readAsDataURL(input.files[0]);
+        }
+      }
+
+      $('#remove-existing-image').click(function() {
+        // Add ajax to call the api, now response is being redirected to edit page.
+        $('#existing-image-preview').hide();
+      })
+    });
+</script>

@@ -1,6 +1,6 @@
 class ProductsController < ApplicationController
   skip_before_action :authenticate_user!, only: [:index, :show]
-  before_action :set_categories, only: [:index, :new, :create, :edit, :update]
+  before_action :set_categories, only: [:index, :new, :create, :edit, :update, :remove_image]
   # Need to fetch the categories in new method as in new page, all categories are displayed.
 
   # Need to fetch the categories in create method as if the validation fails, create method will render new page with the same instance of product(For which user had entered some data but that failed to save).And in new page(new.htm.erb), we have used @categories. and now we rendered that page using create method.
@@ -9,7 +9,7 @@ class ProductsController < ApplicationController
 
   # Need to fetch the categories in update method as if the validation fails, update method will render edit page with the same instance of product(For which user had entered some data but that failed to save).And in edit page(edit.htm.erb), we have used @categories. and now we rendered that page using update method.
 
-  before_action :set_product, only: [:edit, :update, :destroy, :show]
+  before_action :set_product, only: [:edit, :update, :destroy, :show, :remove_image]
 
 
   def index
@@ -66,6 +66,13 @@ class ProductsController < ApplicationController
     @product.destroy
 
     redirect_to products_path, status: :see_other
+  end
+
+  def remove_image
+    authorize @product
+    @product.image.purge
+
+    redirect_to edit_product_path(@product), status: :ok
   end
 
   private

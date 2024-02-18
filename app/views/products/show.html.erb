@@ -5,7 +5,7 @@
         <div class="card text-black">
             <i class="fab fa-apple fa-lg pt-3 pb-1 px-3"></i>
             <div>
-              <%= image_tag @product.image, size: "300x210", alt: "Image not found",class: "card-img-top" if @product.image.attached? %>
+              <%= image_tag (@product.image.attached?) ? (@product.image) : ('products/product-default-image'), size: "300x210", alt: "Image not found",class: "card-img-top" %>
             </div>
             <div class="card-body">
               <div class="text-center">

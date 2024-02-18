@@ -19,6 +19,10 @@ class ProductPolicy < ApplicationPolicy
     user.admin?
   end
 
+  def remove_image?
+    user.admin?
+  end
+
   class Scope < Scope
     # NOTE: Be explicit about which records you allow access to!
     # def resolve

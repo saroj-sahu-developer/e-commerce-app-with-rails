@@ -6,12 +6,8 @@
       <div class="col-md-8">
         <% @carts_products.each do |carts_product| %>
           <div class="row mb-4">
-            <div class="col-md-2">
-              <% if carts_product.product.image_url.present? %>
-                <%= image_tag carts_product.product.image_url, class: "img-fluid", alt: "Image not found" %>
-              <% else %>
-                <%= image_tag "https://totalcomp.com/images/no-image.jpeg", class: "img-fluid", alt: "Image not found" %>
-              <% end %>
+            <div class="col-md-2">              
+              <%= image_tag (carts_product.product.image.attached?) ? (carts_product.product.image) : ('products/product-default-image.jpeg'), class: "img-fluid", alt: "Image not found" %>
             </div>
             <div class="col-md-6">
               <h5><%= carts_product.product.name %></h5>
@@ -21,8 +17,10 @@
             <div class="col-md-4">
               <div class="form-group">
                 <h6>Quantity</h6>
-                <%= select_tag " ", options_for_select((1..10).to_a, selected: carts_product.product_quantity), class: "form-control form-control-sm" %>
-                
+                <%= select_tag "", options_for_select((1..10).to_a, selected: carts_product.product_quantity), class: "form-control form-control-sm cart-product-quantity",
+                data: { product_id: carts_product.product.id } %>
+                <%= link_to "Remove Product", "/cart/#{carts_product.product.id}", 
+                data: { turbo_method: :delete } %>
               </div>
             </div>
           </div>
@@ -31,10 +29,45 @@
       <div class="col-md-4">
         <div class="border p-3">
           <h4>Proceed to buy</h4>
-          <p>Total Amount: <%= number_to_currency(@carts_products.sum { |cp| cp.product.price * cp.product_quantity }, unit: "₹", format: "%u %n") %></p>
+          <p>Total Amount: 
+            <span id="total-amount">
+              <%= number_to_currency(@total_amonut_in_cart, unit: "₹", format: "%u %n") %>
+            </span>
+          </p>
           <%= link_to "Proceed to Buy", "" %>
         </div>
       </div>
     </div>
   <% end %>
 </div>
+
+<script>
+  $(document).ready(function() {
+    var csrfToken = $('meta[name=csrf-token]').attr('content');
+
+    $('.cart-product-quantity').change(function() {
+      var productQuantity = $(this).val();
+      var productId = $(this).data('product-id');
+
+      $.ajax({
+        url: '/cart/' + productId,
+        method: 'POST',
+        headers: {
+          'X-CSRF-Token': csrfToken
+        },
+        data: {
+          product_quantity: productQuantity
+        },
+        success: function(response) {
+          // Update the '#total-amount' element in HTML(ui).
+          var totalAmount = $(response).find('#total-amount').text();
+          $('#total-amount').text(totalAmount);
+        },
+        error: function(xhr, status, error) {
+          console.error(error);
+        }
+      });
+    });
+  });
+</script>
+

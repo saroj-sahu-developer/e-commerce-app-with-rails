@@ -33,7 +33,7 @@
         <div class="col-md-4 mb-4">
           <div class="card">
             <div>
-              <%= image_tag product.image, size: "300x200" , alt: "Image not found", class: "card-img-top" if product.image.attached? %> 
+              <%= image_tag (product.image.attached?)? (product.image) : ('products/product-default-image.jpeg'), size: "300x200" , alt: "Image not found", class: "card-img-top" %> 
             </div>
 
             <div class="card-body text-center">

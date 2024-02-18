@@ -14,6 +14,5 @@
  *= require_self
  */
 
- @import "products/index";
- @import "shared/sidebar.css";
+@import "shared/sidebar.css";
 

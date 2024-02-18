@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   resources :addresses
 
   resources :products
+  delete "/products/:id/remove-image", to: "products#remove_image"
 
   resources :categories do
     resources :products
@@ -19,6 +20,7 @@ Rails.application.routes.draw do
 
   get "/cart", to: "carts#show_cart"
   post "/cart/:product_id", to: "carts#add_product_to_cart"
+  delete "/cart/:product_id", to: "carts#delete_product_from_cart"
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
