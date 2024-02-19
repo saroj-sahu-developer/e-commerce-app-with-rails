@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_02_18_152607) do
+ActiveRecord::Schema[7.1].define(version: 2024_02_19_074912) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -77,7 +77,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_18_152607) do
 
   create_table "orders", force: :cascade do |t|
     t.integer "user_id", null: false
-    t.datetime "ordered_at", null: false
     t.string "status", null: false
     t.integer "address_id", null: false
     t.datetime "created_at", null: false
@@ -97,6 +96,17 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_18_152607) do
     t.index ["product_id"], name: "index_orders_products_on_product_id"
   end
 
+  create_table "payments", force: :cascade do |t|
+    t.integer "order_id", null: false
+    t.decimal "total_amount", precision: 10, scale: 2, null: false
+    t.datetime "payment_date_time"
+    t.string "payment_mode", null: false
+    t.string "payment_status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["order_id"], name: "index_payments_on_order_id"
+  end
+
   create_table "products", force: :cascade do |t|
     t.string "name"
     t.text "description"
@@ -105,7 +115,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_18_152607) do
     t.integer "category_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "image_url"
     t.index ["category_id"], name: "index_products_on_category_id"
   end
 
@@ -134,5 +143,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_18_152607) do
   add_foreign_key "orders", "users"
   add_foreign_key "orders_products", "orders"
   add_foreign_key "orders_products", "products"
+  add_foreign_key "payments", "orders"
   add_foreign_key "products", "categories"
 end

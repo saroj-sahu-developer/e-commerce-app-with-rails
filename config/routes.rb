@@ -12,15 +12,21 @@ Rails.application.routes.draw do
     resources :products
   end
 
+  get "/cart", to: "carts#show_cart"
+  post "/cart/:product_id", to: "carts#add_product_to_cart"
+  delete "/cart/:product_id", to: "carts#delete_product_from_cart"
+
+  get "/checkout", to: "checkout#show"
+
+  resources :orders
+
   # resources :carts, only: [:show] do
   #   member do
   #     post 'add_product_to_cart'
   #   end
   # end
 
-  get "/cart", to: "carts#show_cart"
-  post "/cart/:product_id", to: "carts#add_product_to_cart"
-  delete "/cart/:product_id", to: "carts#delete_product_from_cart"
+
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

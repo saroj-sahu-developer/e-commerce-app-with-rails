@@ -1,0 +1,64 @@
+<%= form_with url: '/orders' do |form| %>
+  <div class="row">
+    <div class="col-md">
+      <%# List Products %>
+      <% unless @all_products_in_cart.empty? %>
+        <h4>Products</h4>
+        <% @all_products_in_cart.each do |record| %>
+          <div class="row mb-3">
+            <div class="col-md">
+              <%= image_tag (record.product.image.attached?) ? (record.product.image) : ('products/product-default-image.jpeg'), alt: "Image not found", size: "150x150"%>
+            </div>
+            <div class="col-md">
+              <strong><%= record.product.name %></strong><br>
+              Quantity: <%= record.product_quantity %><br>
+              Price: <%= number_to_currency(record.product.price, unit: "₹", format: "%u %n") %>
+            </div>
+          </div>
+        <% end %>
+        <%= form.hidden_field :orders_request, value: @formatted_orders_request.to_json %>
+      <% end %>
+    </div>
+
+    <div class="col-md">
+      <%# List addresses %>
+      <h4>Address</h4>
+      <% if @addresses.any? %>
+        <div class="list-group">
+          <% @addresses.each do |address| %>
+            <div class="list-group-item">
+              <label class="form-check">
+                <%= form.radio_button :address_id, address.id, class: 'form-check-input', required: true %>
+                <div class="form-check-label">
+                  <strong>Street:</strong> <%= address.street %><br>
+                  <strong>City:</strong> <%= address.city %><br>
+                  <strong>State:</strong> <%= address.state %><br>
+                  <strong>Zip Code:</strong> <%= address.zip_code %><br>
+                  <strong>Country:</strong> <%= address.country %><br>
+                </div>
+              </label>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <%= link_to "Create Address", new_address_path %>
+      <% end %>
+    </div>
+
+    <div class="col-md">
+      <%# show payment details %>
+      <h4>Choose payment mode</h4>
+      <% @payment_modes.each do |payment_mode| %>
+        <div class="form-check">
+          <%= form.radio_button :payment_mode, payment_mode, class: 'form-check-input', required: true %>
+          <%= label_tag payment_mode, payment_mode, class: 'form-check-label' %>
+        </div>
+      <% end %>
+      <div>
+        <strong>Total Amount</strong> <%= number_to_currency(@total_amount, unit: "₹", format: "%u %n") %>
+        <%= form.hidden_field :total_amount, value: @total_amount %>
+      </div>  
+      <%= form.submit "Place Order" %>
+    </div>
+  </div>
+<% end %>
