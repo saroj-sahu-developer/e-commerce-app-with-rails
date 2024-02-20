@@ -27,7 +27,7 @@ class OrdersController < ApplicationController
       return redirect_to (request.referrer || 'checkout')
     end
 
-    # Delete products cart
+    # Delete products from cart
     carts_products = current_user.cart.carts_products
     carts_products.destroy_all
 
