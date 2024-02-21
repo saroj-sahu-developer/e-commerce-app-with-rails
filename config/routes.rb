@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   devise_for :users
 
   resources :addresses
+  patch "/users/:id/:address_id", to: "addresses#set_default_address"
 
   resources :products
   delete "/products/:id/remove-image", to: "products#remove_image"

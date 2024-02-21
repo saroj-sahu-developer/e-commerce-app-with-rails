@@ -16,7 +16,6 @@
             </div>
           </div>
         <% end %>
-        <%= form.hidden_field :orders_request, value: @formatted_orders_request.to_json %>
       <% end %>
     </div>
 
@@ -28,7 +27,7 @@
           <% @addresses.each do |address| %>
             <div class="list-group-item">
               <label class="form-check">
-                <%= form.radio_button :address_id, address.id, class: 'form-check-input', required: true %>
+                <%= form.radio_button :address_id, address.id, class: 'form-check-input', required: true, checked: (address == @default_address) %>
                 <div class="form-check-label">
                   <strong>Street:</strong> <%= address.street %><br>
                   <strong>City:</strong> <%= address.city %><br>

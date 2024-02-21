@@ -12,6 +12,7 @@ class User < ApplicationRecord
   has_many :addresses, dependent: :destroy
   has_one :cart, dependent: :destroy
   has_many :orders
+  belongs_to :default_address, class_name: 'Address', foreign_key: 'default_address_id', optional: true
 
   after_create :create_cart_for_user
   before_validation :assign_role, on: :create

@@ -1,7 +1,8 @@
 class AddressesController < ApplicationController
   def index
     @addresses = current_user.addresses
-    authorize @addresses 
+    authorize @addresses
+    @default_address = current_user.default_address
   end
 
   def new
@@ -44,6 +45,11 @@ class AddressesController < ApplicationController
     @address.destroy
 
     redirect_to addresses_path, status: :see_other
+  end
+
+  def set_default_address # Move to users controller
+    current_user.update(default_address_id: params[:address_id])
+    redirect_to addresses_path
   end
 
   private

@@ -1,0 +1,27 @@
+<div class="container mt-5">
+  <% @orders_with_product_details.each do |order| %>
+    <div class="card mb-5">
+      <div class="card-header">
+        <strong class="mb-0">Ordered at: <%= order.created_at.strftime("%B %d, %Y %I:%M %p") %>
+        </strong>
+        <%= link_to "View Order", order_path(order), class: "btn btn-primary btn-sm" %>
+      </div>
+      <div class="card-body">
+        <div class="row mt-3">
+          <% order.orders_products.each do |orders_product| %>
+            <div class="col-md-4">
+              <div class="media mb-4">
+                <%= image_tag (orders_product.product.image.attached?) ? (orders_product.product.image) : ('products/product-default-image.jpeg'), alt: "Image not found", class: "mr-3", style: "width: 100px; height: 100px;" %>
+                <div class="media-body">
+                  <h6 class="mt-0"><%= link_to orders_product.product.name, product_path(orders_product.product) %></h6>
+                  <p class="mb-0">Price: <%= number_to_currency(orders_product.product_unit_price, unit: "₹", format: "%u %n") %></p>
+                  <p class="mb-0">Quantity: <%= orders_product.product_quantity %></p>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>      
+    </div>
+  <% end %>
+</div>

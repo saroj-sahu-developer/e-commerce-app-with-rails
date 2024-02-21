@@ -1,6 +1,6 @@
 class AddressPolicy < ApplicationPolicy
   def index?
-    user.customer? && record.any? { |address| address.user == user }
+    user.customer? && (record.empty? || record.any? { |address| address.user == user })
   end
 
   def new?
