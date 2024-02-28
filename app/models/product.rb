@@ -3,6 +3,11 @@ class Product < ApplicationRecord
   has_many :carts_products, dependent: :destroy
   has_many :orders_products, dependent: :nullify
   has_one_attached :image
+  has_many_attached :images do |attachable|
+    attachable.variant :thumb, resize_to_limit: [100, 100]
+    attachable.variant :medium, resize_to_limit: [300, 300]
+    attachable.variant :large, resize_to_limit: [600, 600]
+  end
 
   validates :name, presence:true, length: { maximum: 255 }
   validates :price, presence: true, numericality: { greater_than_or_equal_to: 0 }

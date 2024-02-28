@@ -6,8 +6,11 @@ Rails.application.routes.draw do
   resources :addresses
   patch "/users/:id/:address_id", to: "addresses#set_default_address"
 
-  resources :products
-  delete "/products/:id/remove-image", to: "products#remove_image"
+  resources :products do
+    member do
+      delete 'remove_image/:image_id', to: 'products#remove_image', as: :remove_image
+    end
+  end
 
   resources :categories do
     resources :products
@@ -19,7 +22,15 @@ Rails.application.routes.draw do
 
   get "/checkout", to: "checkout#show"
 
-  resources :orders
+  resources :orders, except: :edit do
+    collection do
+      get 'bulk_edit'
+      patch 'bulk_update'
+      get 'get_status_options_for_orders'
+    end
+  end
+
+  # get "orders/edit", to: "orders#edit"
 
   # resources :carts, only: [:show] do
   #   member do

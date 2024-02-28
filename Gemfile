@@ -46,6 +46,9 @@ gem "image_processing", "~> 1.2"
 
 gem "devise"
 gem "pundit"
+gem 'state_machines'
+gem 'sidekiq'
+gem 'aasm'
 
 
 group :development, :test do

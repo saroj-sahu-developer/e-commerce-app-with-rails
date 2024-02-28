@@ -70,14 +70,18 @@ class ProductsController < ApplicationController
 
   def remove_image
     authorize @product
-    @product.image.purge
+    image = @product.images.find(params[:image_id])
 
-    redirect_to edit_product_path(@product), status: :ok
+    if image.purge
+      redirect_to edit_product_path(@product), notice: 'Image successfully removed.'
+    else
+      redirect_to edit_product_path(@product), alert: 'Failed to remove image.'
+    end
   end
 
   private
   def product_params
-    params.require(:product).permit(:name, :description, :price, :quantity_available, :category_id, :image)
+    params.require(:product).permit(:name, :description, :price, :quantity_available, :category_id, images: [])
   end
 
   def set_categories

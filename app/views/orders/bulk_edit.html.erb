@@ -1,0 +1,135 @@
+<div class="container mt-5">
+  <select id="update_multiple_status">
+    <option selected>Select</option>
+  </select>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Customer</th>
+        <th>Ordered At</th>
+        <th>Total Amount</th>
+        <th>Payment Status</th>
+        <th>Order Status</th>
+        <th>Select</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @orders_with_product_details.each do |order| %>
+        <tr>
+          <td><%= order.user.email %></td>
+          <td><%= order.created_at.strftime("%B %d, %Y %I:%M %p") %></td>
+          <td><%= number_to_currency(order.payment.total_amount, unit: "₹", format: "%u %n") %></td>
+          <td><%= order.payment.payment_status %></td>
+          <td>
+            <% current_order = @order_with_possible_status.find { |record| record[:order_id] == order.id } %>
+            <%= select_tag :order_status, options_for_select(current_order[:possible_statuses]), selected: order.status, data: {order_id: order.id}, class: "order-status" %>
+          </td>
+          <td>
+            <input type="checkbox" name="selectedOrders[]" value="<%= order.id %>" />
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+
+<script>
+  $(document).ready(function() {
+    var csrfToken = $('meta[name=csrf-token]').attr('content');
+
+    $('.order-status').change(function() {
+      var updatedStatus = $(this).val();
+      var orderId = $(this).data('order-id');
+      $.ajax({
+        url: `/orders/${orderId}`,
+        method: 'PATCH',
+        headers: {
+          'X-CSRF-Token': csrfToken
+        },
+        data: {
+          status: updatedStatus
+        },
+        success: function(response) {
+          location.reload();
+        },
+        error: function(xhr, status, error) {
+          console.error(error);
+        }
+      });
+    });
+
+    $('#update_multiple_status').change(function() {
+      var updatedStatus = $(this).val();
+      var checkboxes = document.querySelectorAll('input[name="selectedOrders[]"]:checked');
+      var selectedValues = [];
+
+      // Convert NodeList to array
+      checkboxes = Array.from(checkboxes);
+      checkboxes.forEach(function(checkbox) {
+        selectedValues.push(checkbox.value);
+      });
+
+      // console.log(selectedValues);
+      $.ajax({
+        url: '/orders/bulk_update',
+        method: 'PATCH',
+        headers: {
+          'X-CSRF-Token': csrfToken
+        },
+        data: {
+          order_ids: selectedValues,
+          status: updatedStatus
+        },
+        success: function(response) {
+          location.reload();
+        },
+        error: function(xhr, status, error) {
+          console.error(error);
+        }
+      });
+    });  
+    
+    $('#update_multiple_status').mouseover(function() {
+      var checkboxes = document.querySelectorAll('input[name="selectedOrders[]"]:checked');
+      if(checkboxes.length == 0){
+        return
+      }
+      var selectedValues = [];
+
+      // Convert NodeList to array
+      checkboxes = Array.from(checkboxes);
+      checkboxes.forEach(function(checkbox) {
+        selectedValues.push(checkbox.value);
+      });
+      // console.log(selectedValues);
+
+      $.ajax({
+        url: '/orders/get_status_options_for_orders',
+        method: 'get',
+        headers: {
+          'X-CSRF-Token': csrfToken
+        },
+        data: {
+          order_ids: selectedValues
+        },
+        success: function(response) {
+          // console.log(response.multiple_status_options)
+          var multiple_status_options = response.multiple_status_options;
+          var selectedElement = $('#update_multiple_status');
+          var temporary_variable = '';
+          
+          // Add options to the select element
+          multiple_status_options.forEach(function(value){
+            temporary_variable += ( `<option value=${value}>${value}</option>` )
+          })
+          selectedElement.html('<option selected>Select</option>' + temporary_variable)
+        },
+        error: function(xhr, status, error) {
+          console.error(error);
+        }
+      });
+    })
+  });
+</script>

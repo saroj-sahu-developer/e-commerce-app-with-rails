@@ -32,9 +32,28 @@
       <% @products.each do |product| %>
         <div class="col-md-4 mb-4">
           <div class="card">
-            <div>
-              <%= image_tag (product.image.attached?)? (product.image) : ('products/product-default-image.jpeg'), size: "300x200" , alt: "Image not found", class: "card-img-top" %> 
-            </div>
+            <% if product.images.attached? %>
+              <div id="productCarousel<%= product.id %>" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                  <% product.images.each_with_index do |image, index| %>
+                    <div class="carousel-item <%= 'active' if index.zero? %>">
+                      <%= image_tag image, size: "300x200", class: "d-block w-100 card-img-top" %>
+                    </div>
+                  <% end %>
+                </div>
+
+                <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel<%= product.id %>" data-bs-slide="prev">
+                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#productCarousel<%= product.id %>" data-bs-slide="next">
+                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Next</span>
+                </button>
+              </div>
+            <% else %>
+              <%= image_tag 'products/product-default-image.jpeg', size:"300x200", alt: "Image not found", class: "d-block w-100" %>
+            <% end %>
 
             <div class="card-body text-center">
               <h5 class="card-title">
