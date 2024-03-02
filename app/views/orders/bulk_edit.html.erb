@@ -11,6 +11,7 @@
         <th>Total Amount</th>
         <th>Payment Status</th>
         <th>Order Status</th>
+        <th>View Orders</th>
         <th>Select</th>
       </tr>
     </thead>
@@ -24,6 +25,9 @@
           <td>
             <% current_order = @order_with_possible_status.find { |record| record[:order_id] == order.id } %>
             <%= select_tag :order_status, options_for_select(current_order[:possible_statuses]), selected: order.status, data: {order_id: order.id}, class: "order-status" %>
+          </td>
+          <td>
+            <%= link_to "View Order", order_path(order) %>
           </td>
           <td>
             <input type="checkbox" name="selectedOrders[]" value="<%= order.id %>" />

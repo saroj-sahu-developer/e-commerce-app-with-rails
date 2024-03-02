@@ -7,7 +7,7 @@
         <% @all_products_in_cart.each do |record| %>
           <div class="row mb-3">
             <div class="col-md">
-              <%= image_tag (record.product.image.attached?) ? (record.product.image) : ('products/product-default-image.jpeg'), alt: "Image not found", size: "150x150"%>
+              <%= image_tag (record.product.images.attached?) ? (record.product.images[0]) : ('products/product-default-image.jpeg'), alt: "Image not found", size: "150x150" %>
             </div>
             <div class="col-md">
               <strong><%= record.product.name %></strong><br>

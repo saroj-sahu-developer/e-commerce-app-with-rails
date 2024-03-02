@@ -50,17 +50,18 @@ class OrdersController < ApplicationController
         carts_products.destroy_all
       end
       # transaction was completed to place an order
-
-      redirect_to orders_path, status: :ok
     rescue => e
       # When exception occurs in transaction
       puts "Error while saving the records: #{e.message}"
-      redirect_to (request.referrer || 'checkout')
+      return redirect_to (request.referrer || 'checkout')
     end
+    # debugger
+    redirect_to orders_path, status: :ok
   end
 
   def index
     orders = current_user.orders.order(created_at: :desc)
+    authorize orders
 
     # Joins orders with order_products and products to avoid database calling inside loop
     @orders_with_product_details = orders.includes(orders_products: :product)
@@ -69,6 +70,8 @@ class OrdersController < ApplicationController
 
   def show
     @order = Order.find(params[:id])
+    authorize @order
+
     @payment = @order.payment
     orders_products = @order.orders_products
     # Include the each associated product in orders_products to avoid database calling inside loop
@@ -79,7 +82,8 @@ class OrdersController < ApplicationController
     # To be used by admin, to handle all customer's orders
 
     orders = Order.order(created_at: :desc)
-    @orders_with_product_details = orders.includes(:payment, orders_products: :product)
+    authorize orders
+    @orders_with_product_details = orders.includes(:payment, )
 
     valid_status_options = Order::STATUS_OPTIONS
     # createthe possible status options for each order
@@ -102,7 +106,7 @@ class OrdersController < ApplicationController
 
   def update
     order = Order.find(params[:id])
-
+    authorize order
     # To make only the allowed/possible transitions
     # mention aasm(:status) so that aasm can know which state machine to use(here :status) to fetch the permitted transitions, because multiple state machine can present for a model.
     event_called = false
@@ -126,6 +130,7 @@ class OrdersController < ApplicationController
 
   def bulk_update
     all_orders_to_be_updated = Order.where(id: params[:order_ids])
+    authorize all_orders_to_be_updated
 
     # validates the params['status'] before bulk update because update_all method skips validations
     # unless params[:status].in?(Order::STATUS_OPTIONS)

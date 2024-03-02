@@ -31,7 +31,7 @@
     <% end %>
   </div>
 
-  <% if product&.images&.attached? %>
+  <% if product&.images&.attached? && product&.images&.all?(&:persisted?) %>
     <%# This is for edit page where record has attached images %>
     <div id='existing-image-preview' class="mb-3">
       <p>Existing Images</p>
@@ -45,7 +45,7 @@
 
   <div class="mb-3">
     <%= form.label :images, class: 'form-label' %><br>
-    <% if product&.images&.attached? %>
+    <% if product&.images&.attached? && product&.images&.all?(&:persisted?) %>
       <% product.images.each do |image| %>
         <%= form.hidden_field :images, multiple: true, value: image.signed_id %>
       <% end %>

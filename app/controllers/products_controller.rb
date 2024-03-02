@@ -1,5 +1,6 @@
 class ProductsController < ApplicationController
   skip_before_action :authenticate_user!, only: [:index, :show]
+  # for devise gem(:index, :show can se called without signing in/authenticating the user)
   before_action :set_categories, only: [:index, :new, :create, :edit, :update, :remove_image]
   # Need to fetch the categories in new method as in new page, all categories are displayed.
 

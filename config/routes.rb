@@ -1,4 +1,8 @@
+require 'sidekiq/web'
 Rails.application.routes.draw do
+
+  mount Sidekiq::Web => '/sidekiq'
+
   root "home#index"
 
   devise_for :users
@@ -29,6 +33,8 @@ Rails.application.routes.draw do
       get 'get_status_options_for_orders'
     end
   end
+
+
 
   # get "orders/edit", to: "orders#edit"
 

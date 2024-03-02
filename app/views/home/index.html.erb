@@ -1,6 +1,81 @@
-<div> Welcome to our E-commerce </div>
-<br>
-<% if user_signed_in? %> 
- <div> Welcome <%= current_user.name %> </div> 
-<% end %>
+<%= content_for :title, "E-Commerce Paradise" %>
 
+<% if user_signed_in? %>
+  <div class="container text-center mt-3">
+    <div class="display-4 text-primary">
+      Hi, <%= current_user.name %>
+    </div>
+  </div>
+<%end%>
+
+<div class="container mt-5">
+  <div class="jumbotron text-center bg-light p-5">
+    <h1 class="display-4">Welcome to E-Commerce Paradise</h1>
+    <p class="lead">Discover a world of shopping where trends meet technology. Your ultimate shopping destination.</p>
+    <%= link_to "Explore Products", products_path, class: "btn btn-primary btn-lg" %>
+  </div>
+</div>
+
+<!-- Featured Categories Section -->
+<div class="container mt-5">
+  <h2 class="text-center mb-4 text-primary">Featured Categories</h2>
+  <div class="row">
+    <div class="col-md-4">
+      <div class="card mb-4 shadow-sm">
+        <div class="card-body text-center">
+          <h5 class="card-title">Fashion</h5>
+          <p class="card-text">Explore a wide range of clothing, accessories, and more.</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card mb-4 shadow-sm">
+        <div class="card-body text-center">
+          <h5 class="card-title">Electronics</h5>
+          <p class="card-text">Discover cutting-edge electronics and gadgets.</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card mb-4 shadow-sm">
+        <div class="card-body text-center">
+          <h5 class="card-title">Home Decor</h5>
+          <p class="card-text">Find stylish home decor items to transform your living space.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Testimonials Section -->
+<div class="container mt-5">
+  <h2 class="text-center mb-4 text-primary">What Our Customers Say</h2>
+  <div class="row">
+    <div class="col-md-8 offset-md-2">
+      <div class="card shadow">
+        <div class="card-body text-center">
+          <p class="card-text">"E-Commerce Paradise is my favorite online store. The variety of products and the user-friendly experience make it a great choice for all my shopping needs."</p>
+          <p class="card-text"><strong>Happy Customer</strong></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Contact Us Section -->
+<div class="container mt-5">
+  <h2 class="text-left mb-4 text-primary">Contact Us</h2>
+  <div class="row">
+    <div class="col-md-6">
+      <p class="lead">Have questions or need assistance? We're here to help! Reach out to us through the following channels:</p>
+      <ul class="list-unstyled">
+        <li>Email: info@ecommerceparadise.com</li>
+        <li>Phone: (123) 456-7890</li>
+        <li>Address: 123 Paradise Street, Cityville</li>
+      </ul>
+    </div>
+    <div class="col-md-6">
+      <!-- Add any additional content or placeholders here -->
+    </div>
+  </div>
+</div>

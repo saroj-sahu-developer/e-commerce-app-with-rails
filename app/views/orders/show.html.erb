@@ -10,7 +10,7 @@
       <% @order_with_product_details.each do |orders_product| %>
         <div class="col-md-4 mb-3">
           <div class="media">
-            <%= image_tag (orders_product.product.image.attached?) ? (orders_product.product.image) : ('products/product-default-image.jpeg'), alt: "Image not found", class: "mr-3", style: "width: 100px; height: 100px;" %>
+            <%= image_tag (orders_product.product.images.attached?) ? (orders_product.product.images[0]) : ('products/product-default-image.jpeg'), alt: "Image not found", class: "mr-3", style: "width: 100px; height: 100px;" %>
             <div class="media-body">
               <h6 class="mt-0"><%= link_to orders_product.product.name, product_path(orders_product.product) %></h6>
               <p class="mb-0">Price: <%= number_to_currency(orders_product.product_unit_price, unit: "₹", format: "%u %n") %></p>
@@ -21,7 +21,9 @@
       <% end %>
     </div>
   </div>
-  <div class="card-footer text-right">
-    <%= link_to "All orders", orders_path, class: "btn btn-primary" %>
-  </div>
+  <% if current_user.customer? %>
+    <div class="card-footer text-right">
+      <%= link_to "All orders", orders_path, class: "btn btn-primary" %>
+    </div>
+  <% end %>
 </div>

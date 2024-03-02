@@ -3,14 +3,16 @@
     <%= link_to "Products", products_path, class: (current_page?(products_path) ? 'active' : '') %>
 
     <% if user_signed_in? && current_user.admin? %>
-        <%= link_to "Add new product", new_product_path, class: (current_page?(new_product_path) ? 'active' : '') %>
-        <%= link_to "Category", categories_path, class: (current_page?(categories_path) ? 'active' : '') %>
-        <%= link_to "Add new Category", new_category_path, class: (current_page?(new_category_path) ? 'active' : '') %>
+      <%= link_to "Add new product", new_product_path, class: (current_page?(new_product_path) ? 'active' : '') %>
+      <%= link_to "Categories", categories_path, class: (current_page?(categories_path) ? 'active' : '') %>
+      <%= link_to "Add new Category", new_category_path, class: (current_page?(new_category_path) ? 'active' : '') %>
+      <%= link_to "Manage Orders", bulk_edit_orders_path, class: (current_page?(bulk_edit_orders_path) ? 'active' : '') %>
     <% end %>
 
     <% if user_signed_in? && current_user.customer? %>
-        <%= link_to "Your addresses", addresses_path, class: (current_page?(addresses_path) ? 'active' : '') %>
-        <%= link_to "Your Cart", "/cart", class: (current_page?("/cart") ? 'active' : '') %>
+      <%= link_to "Your addresses", addresses_path, class: (current_page?(addresses_path) ? 'active' : '') %>
+      <%= link_to "Your Cart", "/cart", class: (current_page?("/cart") ? 'active' : '') %>
+      <%= link_to "Your Orders", orders_path, class: (current_page?(orders_path) ? 'active' : '') %>
     <% end %>
 
     <% if user_signed_in? %> 
