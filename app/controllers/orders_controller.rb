@@ -50,13 +50,12 @@ class OrdersController < ApplicationController
         carts_products.destroy_all
       end
       # transaction was completed to place an order
+      redirect_to orders_path, status: :ok
     rescue => e
       # When exception occurs in transaction
       puts "Error while saving the records: #{e.message}"
-      return redirect_to (request.referrer || 'checkout')
+      redirect_to (request.referrer || 'checkout')
     end
-    # debugger
-    redirect_to orders_path, status: :ok
   end
 
   def index

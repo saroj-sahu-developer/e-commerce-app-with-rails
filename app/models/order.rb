@@ -41,4 +41,12 @@ class Order < ApplicationRecord
     end
   end
 
+  after_save :dispatch_order
+
+  private
+  def dispatch_order
+    DispatchOrderJob.set(wait: 20.seconds).perform_later(self, :process_order)
+    DispatchOrderJob.set(wait: 30.seconds).perform_later(self, :ship_order)
+    DispatchOrderJob.set(wait: 40.seconds).perform_later(self, :deliver_order)
+  end
 end
