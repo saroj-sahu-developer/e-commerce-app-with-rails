@@ -6,8 +6,6 @@ class User < ApplicationRecord
 
   validates :name, presence: true
   validates :phone, presence: true
-  validates :role, presence:true, inclusion: { in: ['customer', 'admin'],
-  message: "User's role should be either 'customer' or 'admin'." }
 
   has_many :addresses, dependent: :destroy
   has_one :cart, dependent: :destroy
@@ -15,7 +13,7 @@ class User < ApplicationRecord
   belongs_to :default_address, class_name: 'Address', foreign_key: 'default_address_id', optional: true
 
   after_create :create_cart_for_user
-  before_validation :assign_role, on: :create
+  before_create :assign_role
 
   def admin?
     self.role == 'admin'
