@@ -19,4 +19,14 @@ RSpec.describe Category, type: :model do
       expect(subject).to be_valid
     end
   end
+
+  context 'associations' do
+    it "has many products" do
+      category = create(:category)
+      product1 = create(:product, category: category)
+      product2 = create(:product, category: category)
+
+      expect(category.products).to include(product1, product2)
+    end
+  end
 end

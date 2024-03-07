@@ -8,6 +8,6 @@ FactoryBot.define do
     zip_code { Faker::Address.zip_code }
     country { Faker::Address.country }
 
-    association :user, factory: :user
+    association :user, factory: [:user, :customer]
   end
 end
