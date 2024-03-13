@@ -5,7 +5,9 @@ Rails.application.routes.draw do
 
   root "home#index"
 
-  devise_for :users
+  devise_for :users, controllers: { omniauth_callbacks: 'users/omniauth_callbacks' }
+
+
 
   resources :addresses
   patch "/users/:id/:address_id", to: "addresses#set_default_address"

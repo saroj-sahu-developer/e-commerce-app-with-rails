@@ -1,4 +1,6 @@
 class AddressesController < ApplicationController
+  before_action :set_address, only: [:edit, :update, :destroy]
+
   def index
     @addresses = current_user.addresses
     authorize @addresses
@@ -24,12 +26,10 @@ class AddressesController < ApplicationController
   end
 
   def edit
-    @address = Address.find(params[:id])
     authorize @address
   end
 
   def update
-    @address = Address.find(params[:id])
     authorize @address
 
     if @address.update(address_params)
@@ -40,7 +40,6 @@ class AddressesController < ApplicationController
   end
 
   def destroy
-    @address = Address.find(params[:id])
     authorize @address
     @address.destroy
 
@@ -55,5 +54,9 @@ class AddressesController < ApplicationController
   private
   def address_params
     params.require(:address).permit(:street, :city, :zip_code, :state, :country)
+  end
+
+  def set_address
+    @address ||= Address.find_by(id: params[:id])
   end
 end
