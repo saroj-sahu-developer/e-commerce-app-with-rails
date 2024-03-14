@@ -91,5 +91,9 @@ class ProductsController < ApplicationController
 
   def set_product
     @product ||= Product.find_by(id: params[:id])
+    if @product.nil?
+      flash[:error] = "Invalid product id."
+      redirect_to products_path
+    end
   end
 end
