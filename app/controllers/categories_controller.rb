@@ -43,9 +43,12 @@ class CategoriesController < ApplicationController
   end
 
   private
-
   def set_category
-    @category = Category.find(params[:id])
+    @category = Category.find_by(id: params[:id])
+    if @category.nil?
+      flash[:error] = "Invalid category id."
+      redirect_to categories_path
+    end
   end
 
   def category_params

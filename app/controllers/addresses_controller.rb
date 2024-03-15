@@ -58,5 +58,9 @@ class AddressesController < ApplicationController
 
   def set_address
     @address ||= Address.find_by(id: params[:id])
+    if @address.nil?
+      flash[:error] = "Invalid address id."
+      redirect_to addresses_path
+    end
   end
 end

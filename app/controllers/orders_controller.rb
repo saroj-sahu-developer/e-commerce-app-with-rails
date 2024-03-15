@@ -1,8 +1,15 @@
 class OrdersController < ApplicationController
+  before_action :set_order, only: [:show, :update]
+
   def create
     # Request payload has :address_id, :payment_mode, :total_amount
 
-    selected_address = Address.find(params[:address_id])
+    selected_address = Address.find_by(id: params[:address_id])
+    if selected_address.nil?
+      flash[:error] = "Address not found."
+      return redirect_to request.referrer || orders_path
+    end
+
     # Create record for orders table
     @order = Order.new(
       user: current_user,
@@ -68,7 +75,6 @@ class OrdersController < ApplicationController
 
 
   def show
-    @order = Order.find(params[:id])
     authorize @order
 
     @payment = @order.payment
@@ -104,14 +110,13 @@ class OrdersController < ApplicationController
   end
 
   def update
-    order = Order.find(params[:id])
-    authorize order
+    authorize @order
     # To make only the allowed/possible transitions
     # mention aasm(:status) so that aasm can know which state machine to use(here :status) to fetch the permitted transitions, because multiple state machine can present for a model.
     event_called = false
-    (order.aasm(:status).permitted_transitions).each do |transition|
+    (@order.aasm(:status).permitted_transitions).each do |transition|
       if (transition[:state]).to_s == params[:status]
-        order.send(transition[:event])
+        @order.send(transition[:event])
         event_called = true
         break
       end
@@ -120,7 +125,7 @@ class OrdersController < ApplicationController
     return render :bulk_edit, status: :unprocessable_entity unless event_called
     # if params[:status] doesn't match with any of the possible transaction state(no event called), then exit the function without doing the database call to save the same record without any modification.
 
-    if(order.save)
+    if(@order.save)
       redirect_to "/orders/bulk_edit", status: :see_other
     else
       render :bulk_edit, status: :unprocessable_entity
@@ -172,5 +177,14 @@ class OrdersController < ApplicationController
     render json: {
       multiple_status_options: common_options_for_selected_orders
     }
+  end
+
+  private
+  def set_order
+    @order = Order.find_by(id: params[:id])
+    if @order.nil?
+      flash[:error] = "Invalid order id."
+      redirect_to orders_path
+    end
   end
 end

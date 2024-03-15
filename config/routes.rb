@@ -7,8 +7,6 @@ Rails.application.routes.draw do
 
   devise_for :users, controllers: { omniauth_callbacks: 'users/omniauth_callbacks' }
 
-
-
   resources :addresses
   patch "/users/:id/:address_id", to: "addresses#set_default_address"
 
@@ -35,8 +33,6 @@ Rails.application.routes.draw do
       get 'get_status_options_for_orders'
     end
   end
-
-
 
   # get "orders/edit", to: "orders#edit"
 
